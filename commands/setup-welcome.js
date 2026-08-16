@@ -29,10 +29,19 @@ module.exports = {
         const configFile = path.join(__dirname, '../config.json');
         const testUser = interaction.options.getUser('test-user');
 
+        let config = {
+            welcomeChannelId: null, rulesChannelId: null, rolesChannelId: null, generalChannelId: null,
+            customMessage: "Thanks For Joining Our Server. We Hope You Enjoy Here",
+            customBanner: ""
+        };
+
+        if (fs.existsSync(configFile)) {
+            config = { ...config, ...JSON.parse(fs.readFileSync(configFile, 'utf8')) };
+        }
+
         // Handle Admin testing simulator
         if (testUser) {
-            if (!fs.existsSync(configFile)) return interaction.reply({ content: '❌ Complete your channel setup first.', ephemeral: true });
-            const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+            if (!config.welcomeChannelId) return interaction.reply({ content: '❌ Complete your channel setup first.', ephemeral: true });
 
             const targetChannel = interaction.guild.channels.cache.get(config.welcomeChannelId);
             if (!targetChannel) return interaction.reply({ content: '❌ Welcome channel not found.', ephemeral: true });
@@ -45,23 +54,31 @@ module.exports = {
             const rulesChannel = config.rulesChannelId ? `<#${config.rulesChannelId}>` : '#rules';
             const rolesChannel = config.rolesChannelId ? `<#${config.rolesChannelId}>` : '#get-roles';
             const generalChannel = config.generalChannelId ? `<#${config.generalChannelId}>` : '#general-chat';
-            const bannerFile = new AttachmentBuilder(path.join(__dirname, '../banner.png'), { name: 'welcome-banner.png' });
 
             const welcomeEmbed = new EmbedBuilder()
                 .setColor('#101216')
                 .setAuthor({ name: memberObj.user.username, iconURL: memberObj.user.displayAvatarURL({ dynamic: true }) })
                 .setTitle(`Welcome To ${memberObj.guild.name}`)
-                .setDescription(`Thanks For Joining Our Server. We Hope You Enjoy Here`)
+                .setDescription(config.customMessage)
                 .setThumbnail(memberObj.user.displayAvatarURL({ dynamic: true, size: 256 }))
                 .addFields(
                     { name: 'Make Sure To Check', value: rulesChannel, inline: false },
                     { name: 'Take Your', value: rolesChannel, inline: false },
                     { name: 'Visit Our', value: generalChannel, inline: false }
                 )
-                .setImage('attachment://welcome-banner.png') 
                 .setFooter({ text: `You are member number #${memberObj.guild.memberCount} to join the squad! 🚀` });
 
-            const testMsg = await targetChannel.send({ content: `welcome ${memberObj}!`, embeds: [welcomeEmbed], files: [bannerFile] });
+            const files = [];
+            // If admin set a custom pop-up link url, use it. Otherwise fall back to local file.
+            if (config.customBanner && config.customBanner.startsWith('http')) {
+                welcomeEmbed.setImage(config.customBanner);
+            } else {
+                const bannerFile = new AttachmentBuilder(path.join(__dirname, '../banner.png'), { name: 'welcome-banner.png' });
+                welcomeEmbed.setImage('attachment://welcome-banner.png');
+                files.push(bannerFile);
+            }
+
+            const testMsg = await targetChannel.send({ content: `welcome ${memberObj}!`, embeds: [welcomeEmbed], files: files });
             await testMsg.react('👋');
             return;
         }
@@ -72,17 +89,15 @@ module.exports = {
         const rolesChan = interaction.options.getChannel('roles-channel');
         const generalChan = interaction.options.getChannel('general-channel');
 
-        const config = {
-            welcomeChannelId: welcomeChan.id,
-            rulesChannelId: rulesChan.id,
-            rolesChannelId: rolesChan.id,
-            generalChannelId: generalChan.id
-        };
+        config.welcomeChannelId = welcomeChan.id;
+        config.rulesChannelId = rulesChan.id;
+        config.rolesChannelId = rolesChan.id;
+        config.generalChannelId = generalChan.id;
 
         fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
 
         await interaction.reply({
-            content: `✅ **Setup Complete!** Channels successfully linked.`,
+            content: `✅ **Setup Complete!** Channels successfully linked. Run \`/welcome-edit\` to customize text or banner layout.`,
             ephemeral: true
         });
     }

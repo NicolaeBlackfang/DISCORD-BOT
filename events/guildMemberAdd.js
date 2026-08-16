@@ -19,8 +19,6 @@ module.exports = {
             const rolesChannel = config.rolesChannelId ? `<#${config.rolesChannelId}>` : '#get-roles';
             const generalChannel = config.generalChannelId ? `<#${config.generalChannelId}>` : '#general-chat';
 
-            const bannerFile = new AttachmentBuilder(path.join(__dirname, '../banner.png'), { name: 'welcome-banner.png' });
-
             const welcomeEmbed = new EmbedBuilder()
                 .setColor('#101216')
                 .setAuthor({ 
@@ -28,20 +26,28 @@ module.exports = {
                     iconURL: member.user.displayAvatarURL({ dynamic: true }) 
                 })
                 .setTitle(`Welcome To ${member.guild.name}`)
-                .setDescription(`Thanks For Joining Our Server. We Hope You Enjoy Here`)
+                .setDescription(config.customMessage || "Thanks For Joining Our Server. We Hope You Enjoy Here")
                 .setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 256 }))
                 .addFields(
                     { name: 'Make Sure To Check', value: rulesChannel, inline: false },
                     { name: 'Take Your', value: rolesChannel, inline: false },
                     { name: 'Visit Our', value: generalChannel, inline: false }
                 )
-                .setImage('attachment://welcome-banner.png') 
                 .setFooter({ text: `You are member number #${member.guild.memberCount} to join the squad! 🚀` });
+
+            const files = [];
+            if (config.customBanner && config.customBanner.startsWith('http')) {
+                welcomeEmbed.setImage(config.customBanner);
+            } else {
+                const bannerFile = new AttachmentBuilder(path.join(__dirname, '../banner.png'), { name: 'welcome-banner.png' });
+                welcomeEmbed.setImage('attachment://welcome-banner.png');
+                files.push(bannerFile);
+            }
 
             const welcomeMsg = await channel.send({
                 content: `welcome ${member}!`,
                 embeds: [welcomeEmbed],
-                files: [bannerFile]
+                files: files
             });
             await welcomeMsg.react('👋');
         } catch (error) {
