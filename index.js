@@ -1,3 +1,4 @@
+require('dotenv').config(); // Required for reading local .env tokens safely
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const express = require('express');
 const fs = require('fs');
@@ -11,7 +12,11 @@ app.listen(PORT, () => console.log(`Web server listening on port ${PORT}`));
 
 // Setup client
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers]
+    intents: [
+        GatewayIntentBits.Guilds, 
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildVoiceStates // 🌟 CRITICAL FIX: Allows bot to see who is in a voice channel
+    ]
 });
 
 // Dynamic storage handles for commands
