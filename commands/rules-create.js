@@ -3,18 +3,18 @@ const { SlashCommandBuilder, ChannelType, ModalBuilder, TextInputBuilder, TextIn
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('rules-create')
-        .setDescription('Build a beautiful server rules card using an interactive pop-up text canvas')
+        .setDescription('Create a beautiful rules embed using an interactive text pop-up')
         .addChannelOption(option => 
-            option.setName('target-channel').setDescription('Where should the rules card be sent?').addChannelTypes(ChannelType.GuildText).setRequired(true)
+            option.setName('target-channel').setDescription('Where should the rules be posted?').addChannelTypes(ChannelType.GuildText).setRequired(true)
         )
         .addStringOption(option => 
-            option.setName('rules-title').setDescription('The title header for your rule panel board (e.g., Server Guidelines)').setRequired(true)
+            option.setName('rules-title').setDescription('The title for your rules board (e.g., Server Rules)').setRequired(true)
         )
         .addStringOption(option => 
-            option.setName('thumbnail-url').setDescription('Optional image URL link for the right corner thumbnail icon').setRequired(false)
+            option.setName('thumbnail-url').setDescription('Optional direct image URL for the right-hand thumbnail icon').setRequired(false)
         )
         .addStringOption(option => 
-            option.setName('banner-url').setDescription('Optional image URL link for the bottom wide banner graphic').setRequired(false)
+            option.setName('banner-url').setDescription('Optional direct image URL for the bottom large banner graphic').setRequired(false)
         ),
     async execute(interaction) {
         if (!interaction.member.permissions.has('Administrator')) {
@@ -26,8 +26,7 @@ module.exports = {
         const thumbnailUrl = interaction.options.getString('thumbnail-url') || '';
         const bannerUrl = interaction.options.getString('banner-url') || '';
 
-        // Build the modal pop-up window interface structure layout
-        // Custom ID encodes layout specifications so the interaction listener can decode it cleanly later
+        // Build the text area form modal window
         const modal = new ModalBuilder()
             .setCustomId(`rules_create_modal_${targetChannel.id}`)
             .setTitle('Write Your Server Rules Canvas');
@@ -36,16 +35,16 @@ module.exports = {
             .setCustomId('modal_rules_content')
             .setLabel(`Rules Text for: ${title}`)
             .setStyle(TextInputStyle.Paragraph)
-            .setPlaceholder('1. Be respectful to others\n2. No spamming or advertisements\n3. Keep chat friendly...')
+            .setPlaceholder('1. Be respectful to others\n2. No spam or ads\n3. Enjoy your stay!')
             .setRequired(true);
 
         const firstRow = new ActionRowBuilder().addComponents(rulesInput);
         modal.addComponents(firstRow);
 
-        // Temporarily store meta parameters on the client memory thread so the interaction listener can pick them up when submitted
+        // Keep image properties safe in the client memory thread for processing during submission
         interaction.client.rulesMeta = { title, thumbnailUrl, bannerUrl };
 
-        // Open the text pop-up form area on the screen
+        // Flash the text modal pop up onto the Admin screen
         await interaction.showModal(modal);
     }
 };
