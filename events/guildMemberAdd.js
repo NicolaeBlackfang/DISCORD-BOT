@@ -25,9 +25,12 @@ module.exports = {
                     name: member.user.username, 
                     iconURL: member.user.displayAvatarURL({ dynamic: true }) 
                 })
-                .setTitle(`Welcome To ${member.guild.name}`)
+                .setTitle(config.customTitle || `Welcome To ${member.guild.name}`)
                 .setDescription(config.customMessage || "Thanks For Joining Our Server. We Hope You Enjoy Here")
+                
+                // 🌟 KEEPS JOINING USER PROFILE LOGO AS THE EMBED THUMBNAIL
                 .setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 256 }))
+                
                 .addFields(
                     { name: 'Make Sure To Check', value: rulesChannel, inline: false },
                     { name: 'Take Your', value: rolesChannel, inline: false },
