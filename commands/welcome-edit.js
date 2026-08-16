@@ -16,9 +16,11 @@ module.exports = {
         let currentBanner = "";
 
         if (fs.existsSync(configFile)) {
-            const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
-            if (config.customMessage) currentMessage = config.customMessage;
-            if (config.customBanner) currentBanner = config.customBanner;
+            try {
+                const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+                if (config.customMessage) currentMessage = config.customMessage;
+                if (config.customBanner) currentBanner = config.customBanner;
+            } catch (e) {}
         }
 
         // Build the pop-up panel modal
@@ -26,7 +28,7 @@ module.exports = {
             .setCustomId('welcome_edit_modal')
             .setTitle('Edit Welcome Asset Layout');
 
-        // Create Text Input slot for the welcome message text
+        // Text Input slot for the welcome message text
         const messageInput = new TextInputBuilder()
             .setCustomId('modal_welcome_message')
             .setLabel('Welcome Card Description')
@@ -35,7 +37,7 @@ module.exports = {
             .setValue(currentMessage)
             .setRequired(true);
 
-        // Create Text Input slot for the banner link url address 
+        // Text Input slot for the banner link url address 
         const bannerInput = new TextInputBuilder()
             .setCustomId('modal_welcome_banner')
             .setLabel('Banner Image URL (Leave blank for local folder file)')
