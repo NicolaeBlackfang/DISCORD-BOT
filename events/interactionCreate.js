@@ -21,23 +21,20 @@ module.exports = {
         if (interaction.isModalSubmit()) {
             const configFile = path.join(__dirname, '../config.json');
 
-            // Handle Welcome Edit Modal Submission Save Routing
-            if (interaction.customId === 'welcome_edit_modal') {
-                let config = { 
-                    welcomeChannelId: null, rulesChannelId: null, rolesChannelId: null, generalChannelId: null,
-                    customTitle: "Welcome To Our Server", customMessage: "Thanks For Joining Our Server. We Hope You Enjoy Here", customBanner: ""
-                };
-                
+            // 🌟 Updated Welcome Setup Modal Submission Processor
+            if (interaction.customId === 'welcome_setup_modal') {
+                let config = {};
                 if (fs.existsSync(configFile)) {
-                    try { config = { ...config, ...JSON.parse(fs.readFileSync(configFile, 'utf8')) }; } catch (e) {}
+                    try { config = JSON.parse(fs.readFileSync(configFile, 'utf8')); } catch (e) {}
                 }
 
+                config.welcomeChannelId = interaction.fields.getTextInputValue('modal_welcome_channel');
                 config.customTitle = interaction.fields.getTextInputValue('modal_welcome_title');
                 config.customMessage = interaction.fields.getTextInputValue('modal_welcome_message');
                 config.customBanner = interaction.fields.getTextInputValue('modal_welcome_banner');
                 
                 fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
-                return interaction.reply({ content: `✅ **Welcome Card Assets Updated Successfully!**`, ephemeral: true });
+                return interaction.reply({ content: `✅ **Welcome configurations updated successfully!**\n• Output Channel ID: \`${config.welcomeChannelId}\``, ephemeral: true });
             }
 
             // Rules Create Modal Logic

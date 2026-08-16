@@ -15,10 +15,6 @@ module.exports = {
         if (!channel) return;
 
         try {
-            const rulesChannel = config.rulesChannelId ? `<#${config.rulesChannelId}>` : '#rules';
-            const rolesChannel = config.rolesChannelId ? `<#${config.rolesChannelId}>` : '#get-roles';
-            const generalChannel = config.generalChannelId ? `<#${config.generalChannelId}>` : '#general-chat';
-
             const welcomeEmbed = new EmbedBuilder()
                 .setColor('#101216')
                 .setAuthor({ 
@@ -28,14 +24,10 @@ module.exports = {
                 .setTitle(config.customTitle || `Welcome To ${member.guild.name}`)
                 .setDescription(config.customMessage || "Thanks For Joining Our Server. We Hope You Enjoy Here")
                 
-                // 🌟 KEEPS JOINING USER PROFILE LOGO AS THE EMBED THUMBNAIL
+                // 🌟 THUMBNAIL LOGO AUTOMATICALLY MAPS TO JOINED USER PROFILE ICON
                 .setThumbnail(member.user.displayAvatarURL({ dynamic: true, size: 256 }))
                 
-                .addFields(
-                    { name: 'Make Sure To Check', value: rulesChannel, inline: false },
-                    { name: 'Take Your', value: rolesChannel, inline: false },
-                    { name: 'Visit Our', value: generalChannel, inline: false }
-                )
+                // 🌟 FOOTER AUTOMATICALLY CONTINUES TRACKING TOTAL GUILD SQUAD MEMBERS COUNT
                 .setFooter({ text: `You are member number #${member.guild.memberCount} to join the squad! 🚀` });
 
             const files = [];
