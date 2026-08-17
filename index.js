@@ -10,12 +10,11 @@ const PORT = process.env.PORT || 8080;
 app.get('/', (req, res) => res.send('Bot is alive!'));
 app.listen(PORT, () => console.log(`Web server listening on port ${PORT}`));
 
-// Setup client
+// Setup client - clean intent profile
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds, 
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildVoiceStates // 🌟 CRITICAL FIX: Allows bot to see who is in a voice channel
+        GatewayIntentBits.GuildMembers
     ]
 });
 
