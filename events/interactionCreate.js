@@ -24,19 +24,22 @@ module.exports = {
             const configFile = path.join(__dirname, '../config.json');
 
             // PIPELINE A: Welcome configuration editor
-            if (interaction.customId === 'welcome_setup_modal') {
-                let config = {};
+            if (interaction.customId === 'welcome_edit_modal') {
+                let config = { 
+                    welcomeChannelId: null, rulesChannelId: null, rolesChannelId: null, generalChannelId: null,
+                    customTitle: "Welcome To Our Server", customMessage: "Thanks For Joining Our Server. We Hope You Enjoy Here", customBanner: ""
+                };
+                
                 if (fs.existsSync(configFile)) {
-                    try { config = JSON.parse(fs.readFileSync(configFile, 'utf8')); } catch (e) {}
+                    try { config = { ...config, ...JSON.parse(fs.readFileSync(configFile, 'utf8')) }; } catch (e) {}
                 }
 
-                config.welcomeChannelId = interaction.fields.getTextInputValue('modal_welcome_channel');
                 config.customTitle = interaction.fields.getTextInputValue('modal_welcome_title');
                 config.customMessage = interaction.fields.getTextInputValue('modal_welcome_message');
                 config.customBanner = interaction.fields.getTextInputValue('modal_welcome_banner');
                 
                 fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
-                return interaction.reply({ content: `✅ **Welcome configurations updated successfully!**\n• Output Channel ID: \`${config.welcomeChannelId}\``, ephemeral: true });
+                return interaction.reply({ content: `✅ **Welcome Card Assets Updated Successfully!**`, ephemeral: true });
             }
 
             // PIPELINE B: Rules initialization builder
@@ -71,7 +74,7 @@ module.exports = {
                 }
             }
 
-            // PIPELINE C: Rules description upgrade modifier
+            // 🌟 PIPELINE C: Rules description upgrade modifier (FIXED IMAGE LOSS)
             if (interaction.customId.startsWith('rules_update_modal_')) {
                 const rawParams = interaction.customId.replace('rules_update_modal_', '');
                 const underscoreIndex = rawParams.indexOf('_');
@@ -84,20 +87,25 @@ module.exports = {
 
                 try {
                     const targetMessage = await channel.messages.fetch(messageId);
+                    
+                    // Isolate the absolute first embed entry in the target message array
                     const existingEmbed = targetMessage.embeds[0];
                     if (!existingEmbed) {
                         return interaction.reply({ content: '❌ The message no longer contains a valid embed layout.', ephemeral: true });
                     }
 
+                    // Build a fresh embed framework carrying over previous Title and metadata structures
                     const updatedEmbed = new EmbedBuilder()
                         .setColor('#101216')
                         .setTitle(existingEmbed.title || 'Server Rules')
-                        .setDescription(updatedRulesContent)
+                        .setDescription(updatedRulesContent) // Insjects your edited description text content
                         .setTimestamp();
 
                     if (existingEmbed.footer) {
                         updatedEmbed.setFooter({ text: existingEmbed.footer.text, iconURL: existingEmbed.footer.iconURL });
                     }
+
+                    // 🌟 FIX CORE DETAILS: Reads and migrates images from the live embed so they don't get lost
                     if (existingEmbed.thumbnail && existingEmbed.thumbnail.url) {
                         updatedEmbed.setThumbnail(existingEmbed.thumbnail.url);
                     }
