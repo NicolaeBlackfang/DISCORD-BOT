@@ -8,7 +8,7 @@ module.exports = {
     async execute(client) {
         console.log(`Logged in as ${client.user.tag}!`);
 
-        // Load commands to register them to Discord API
+        // Scan your local folder to gather active commands
         const commands = [];
         const commandsPath = path.join(__dirname, '../commands');
         const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
@@ -21,10 +21,17 @@ module.exports = {
         const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
         try {
-            await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
-            console.log('Successfully registered modular global application (/) commands.');
+            console.log('Started overwriting and purging old commands list configuration...');
+            
+            // 🌟 CRITICAL RE-SYNC PATCH: Fully overrides Discord\'s list with your current local folder files
+            await rest.put(
+                Routes.applicationCommands(client.user.id), 
+                { body: commands }
+            );
+            
+            console.log('Successfully synchronized active application (/) commands.');
         } catch (error) {
-            console.error(error);
+            console.error('Failed to sync slash command registry tree:', error);
         }
     },
 };
