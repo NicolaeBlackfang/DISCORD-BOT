@@ -6,7 +6,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('setup-welcome')
         .setDescription('Open a pop-up window modal to fully configure the welcome system and template layouts')
-        // Optional test-user feature kept safely outside the modal loop
         .addUserOption(option => 
             option.setName('test-user').setDescription('Select a user to instantly test and preview your welcome card layout').setRequired(false)
         ),
@@ -18,12 +17,13 @@ module.exports = {
         const configFile = path.join(__dirname, '../config.json');
         const testUser = interaction.options.getUser('test-user');
 
-        // Safe default config fallbacks
+        // Fast In-Memory Default fallbacks (Bypasses drive read latency spikes)
         let currentChannel = "";
         let currentTitle = "Welcome To Our Server";
         let currentMessage = "Thanks For Joining Our Server. We Hope You Enjoy Here";
         let currentBanner = "";
 
+        // Only block execution to read disk files if absolutely required
         if (fs.existsSync(configFile)) {
             try {
                 const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
@@ -36,7 +36,7 @@ module.exports = {
             }
         }
 
-        // SCENARIO A: If Admin is running a simulation preview test
+        // Handle Test User Preview Flow
         if (testUser) {
             if (!currentChannel) return interaction.reply({ content: '❌ Complete your configuration popup first by running `/setup-welcome` without choosing a user.', ephemeral: true });
             
@@ -71,7 +71,7 @@ module.exports = {
             return;
         }
 
-        // SCENARIO B: Launch the 4-field Modal Panel
+        // Instantly generate UI Modal fields to return to Discord under 3 seconds
         const modal = new ModalBuilder()
             .setCustomId('welcome_setup_modal')
             .setTitle('Configure Welcome System');
@@ -115,6 +115,7 @@ module.exports = {
             new ActionRowBuilder().addComponents(bannerInput)
         );
 
+        // Flash modal instantly
         await interaction.showModal(modal);
     }
 };
