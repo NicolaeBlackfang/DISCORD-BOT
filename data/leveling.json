@@ -1,0 +1,8 @@
+{
+  "messageXP": 25,
+  "messageCooldownSeconds": 30,
+  "voiceXPPerMinute": 10,
+  "voiceXPIntervalSeconds": 60,
+  "ignoreMutedVoice": true,
+  "levelMultiplier": 100
+}

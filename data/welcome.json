@@ -1,0 +1,16 @@
+{
+  "channelId": "1539590257681367112",
+  "message": "👋 Welcome to **{server}**, {user}! We're thrilled to have you here. Check out the rules and enjoy your stay!",
+  "embed": {
+    "title": "🎉 New Member Joined!",
+    "color": "#5865F2",
+    "thumbnail": "{user_avatar}",
+    "banners": [
+      "https://i.imgur.com/8N4A9v2.jpg",
+      "https://i.imgur.com/uGfJ5fR.jpg",
+      "https://i.imgur.com/3Z4S8eM.jpg",
+      "https://i.imgur.com/x0R4T19.jpg"
+    ],
+    "footer": "Member #{member_count}"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "title": "📊 {user_name}'s Rank Card",
+  "color": "#5865F2",
+  "progressBarFilled": "🟩",
+  "progressBarEmpty": "⬛",
+  "showAvatar": true,
+  "footer": "Keep chatting to earn more XP!"
+}

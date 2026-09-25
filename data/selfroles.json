@@ -1,0 +1,48 @@
+{
+  "games": {
+    "embed": {
+      "title": "🎮 Favorite Games",
+      "description": "Select the games you play to get access to their channels!",
+      "color": "#1F8B4C",
+      "footer": "Click to assign or remove game roles"
+    },
+    "placeholder": "Select your favorite games...",
+    "roles": [
+      {
+        "label": "Minecraft",
+        "value": "ROLE_ID_MINECRAFT",
+        "description": "Access Minecraft channels",
+        "emoji": "⛏️"
+      },
+      {
+        "label": "Valorant",
+        "value": "ROLE_ID_VALORANT",
+        "description": "Access Valorant channels",
+        "emoji": "🎯"
+      }
+    ]
+  },
+  "food": {
+    "embed": {
+      "title": "🍕 Favorite Food",
+      "description": "Pick your favorite foods to show on your profile!",
+      "color": "#E67E22",
+      "footer": "Click to assign or remove food roles"
+    },
+    "placeholder": "Select your favorite food...",
+    "roles": [
+      {
+        "label": "Pizza Lover",
+        "value": "ROLE_ID_PIZZA",
+        "description": "Get the Pizza role",
+        "emoji": "🍕"
+      },
+      {
+        "label": "Burger Squad",
+        "value": "ROLE_ID_BURGER",
+        "description": "Get the Burger role",
+        "emoji": "🍔"
+      }
+    ]
+  }
+}
