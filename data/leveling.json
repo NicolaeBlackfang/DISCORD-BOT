@@ -4,5 +4,15 @@
   "voiceXPPerMinute": 10,
   "voiceXPIntervalSeconds": 60,
   "ignoreMutedVoice": true,
-  "levelMultiplier": 100
+  "levelMultiplier": 100,
+  "maxLevel": 100,
+  "roleRewards": {
+    "5": "ROLE_ID_LEVEL_5",
+    "10": "ROLE_ID_LEVEL_10",
+    "15": "ROLE_ID_LEVEL_15",
+    "20": "ROLE_ID_LEVEL_20",
+    "25": "ROLE_ID_LEVEL_25",
+    "30": "ROLE_ID_LEVEL_30",
+    "50": "ROLE_ID_LEVEL_50"
+  }
 }

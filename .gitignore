@@ -1,4 +1,9 @@
+# Local environment variables and tokens
+.env
+
+# Dependencies
 node_modules/
-.env
-.env
-.env
+
+# Local databases and active user storage (e.g. levels.json)
+data/*.json
+!data/.gitkeep
