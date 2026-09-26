@@ -10,9 +10,11 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
+    GatewayIntentBits.MessageContent, // <--- REQUIRED for prefix commands like ?setnick
+    GatewayIntentBits.GuildMembers   // <--- REQUIRED to read/modify member nicknames
   ]
 });
+
 
 client.commands = new Collection();
 client.components = new Collection();
